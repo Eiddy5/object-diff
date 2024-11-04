@@ -17,9 +17,16 @@ public class DifferDispatcher {
         this.isReturnableResolver = isReturnableResolver;
     }
 
+    public DifferProvider getDifferProvider() {
+        return differProvider;
+    }
+
+    public IsReturnableResolver getIsReturnableResolver() {
+        return isReturnableResolver;
+    }
 
     public DiffNode dispatch(DiffNode parentNode, Instances parentInstances, Access access) {
-        DiffNode node = compare(parentNode, parentInstances, access);
+        DiffNode node = compare(parentInstances, access);
         // todo 边界条件
         if (parentNode != null && isReturnableResolver.isReturnable(node)) {
             parentNode.addChildren(node);
@@ -27,17 +34,11 @@ public class DifferDispatcher {
         return node;
     }
 
-    private DiffNode compare(DiffNode parentNode, Instances parentInstances, Access access) {
-        DiffNode diffNode = new DiffNode(access, null);
-        Instances accessedInstances;
-        if (access instanceof PropertyAccess) {
-            PropertyAccess propertyAccess = (PropertyAccess) access;
-            accessedInstances = parentInstances.access(propertyAccess);
-        } else {
-            accessedInstances = parentInstances.access(access);
-        }
+    private DiffNode compare(Instances parentInstances, Access access) {
+        DiffNode beanNode = new DiffNode(access, null);
+        Instances accessedInstances = parentInstances.access(access);
         Differ differ = differProvider.retrieveDiffer(accessedInstances.getType());
-        return differ.compare(diffNode, accessedInstances);
+        return differ.compare(beanNode, accessedInstances);
     }
 
 

@@ -13,7 +13,7 @@ public class TypeInfoResolver {
         TypeInfo typeInfo = new TypeInfo(type);
         Field[] fields = type.getFields();
         for (Field field : fields) {
-            PropertyAccess access = new PropertyAccess(field.getName(), field.getClass());
+            PropertyAccess access = new PropertyAccess(field.getName(), field.getType());
             typeInfo.setAccess(access);
         }
         return typeInfo;

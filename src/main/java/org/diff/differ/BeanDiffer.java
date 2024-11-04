@@ -5,16 +5,19 @@ import org.diff.DiffNode;
 import org.diff.Instances;
 import org.diff.TypeInfo;
 import org.diff.access.PropertyAccess;
+import org.diff.resolver.IsReturnableResolver;
 import org.diff.resolver.TypeInfoResolver;
 
 public class BeanDiffer implements Differ {
 
     private final DifferDispatcher differDispatcher;
     private final TypeInfoResolver typeInfoResolver;
+    private final IsReturnableResolver isReturnableResolver;
 
     public BeanDiffer(DifferDispatcher differDispatcher, TypeInfoResolver typeInfoResolver) {
         this.differDispatcher = differDispatcher;
         this.typeInfoResolver = typeInfoResolver;
+        this.isReturnableResolver = differDispatcher.getIsReturnableResolver();
     }
 
     @Override
@@ -42,7 +45,8 @@ public class BeanDiffer implements Differ {
         parentNode.setTypeInfo(typeInfo);
         for (PropertyAccess propertyAccess : typeInfo.accesses()) {
             DiffNode propertyNode = differDispatcher.dispatch(parentNode, instances, propertyAccess);
-            parentNode.addChildren(propertyNode);
+            if (isReturnableResolver.isReturnable(propertyNode))
+                parentNode.addChildren(propertyNode);
         }
     }
 }

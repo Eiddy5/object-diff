@@ -2,6 +2,9 @@ package org.diff;
 
 import org.diff.entry.Company;
 import org.diff.entry.User;
+import org.javers.core.Javers;
+import org.javers.core.JaversBuilder;
+import org.javers.core.diff.Diff;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -10,7 +13,9 @@ public class ObjectDiffTest {
 
     @Test
     public void objectDiff(){
-
+        Javers javers = JaversBuilder.javers().build();
+        Diff diff = javers.compare(company1(), company2());
+        System.out.println(diff);
         DiffNode node = ObjectDiffer.use().compare(company1(), company2());
         System.out.println(node);
     }
