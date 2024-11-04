@@ -52,24 +52,23 @@ public class DiffNode {
 
 
     public void addChildren(DiffNode node) {
-        children.add( node);
-        if (state == State.UNCHANGED && node.hasChanges()) {
-            state = State.CHANGED;
+        children.add(node);
+        if (node.state == State.UNCHANGED && node.hasChanges()) {
+            node.state = State.CHANGED;
         }
     }
 
-    public boolean hasAdded(){
-    	return State.ADDED.equals(state);
+    public boolean hasAdded() {
+        return State.ADDED.equals(state);
     }
 
-    public boolean hasRemoved(){
-    	return State.REMOVED.equals(state);
+    public boolean hasRemoved() {
+        return State.REMOVED.equals(state);
     }
 
-    public boolean hasChanges(){
+    public boolean hasChanges() {
         return hasAdded() || hasRemoved();
     }
-
 
 
     public boolean canReturn() {

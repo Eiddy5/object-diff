@@ -19,7 +19,6 @@ public class ObjectDiffer {
 
     public static ObjectDiffer use() {
         return new ObjectDiffer();
-
     }
 
     public DiffNode compare(Object base, Object working) {

@@ -37,11 +37,7 @@ public class DifferDispatcher {
             accessedInstances = parentInstances.access(access);
         }
         Differ differ = differProvider.retrieveDiffer(accessedInstances.getType());
-        DiffNode compared = differ.compare(diffNode, accessedInstances);
-        if (parentNode != null){
-            parentNode.addChildren(compared);
-        }
-        return compared;
+        return differ.compare(diffNode, accessedInstances);
     }
 
 
