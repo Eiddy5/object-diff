@@ -4,20 +4,46 @@ import org.diff.entry.Company;
 import org.diff.entry.User;
 import org.javers.core.Javers;
 import org.javers.core.JaversBuilder;
+import org.javers.core.diff.Change;
 import org.javers.core.diff.Diff;
+import org.javers.core.diff.changetype.ValueChange;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 public class ObjectDiffTest {
+    private Object base;
+    private Object working;
+
 
     @Test
-    public void objectDiff(){
+    public void objectDiff() {
         Javers javers = JaversBuilder.javers().build();
         Diff diff = javers.compare(company1(), company2());
-        System.out.println(diff);
-        DiffNode node = ObjectDiffer.use().compare(company1(), company2());
-        System.out.println(node);
+        List<Change> changes = diff.getChanges();
+        changes.forEach(change -> {
+            if (change instanceof ValueChange valueChange) {
+                Object left = valueChange.getLeft();
+                Object right = valueChange.getRight();
+                if (left == null && right != null) {
+                    System.out.println("add");
+                } else if (left != null && right == null) {
+                    System.out.println("remove");
+                } else {
+                    System.out.println("modified");
+                }
+                Optional<Object> affectedObject = valueChange.getAffectedObject();
+                affectedObject.ifPresent(object -> {
+                });
+                String propertyName = valueChange.getPropertyName();
+
+            }
+        });
+
+//        DiffNode node = ObjectDiffer.use().compare(company1(), company2());
+//        System.out.println(node);
     }
 
     private Company company1() {
@@ -34,7 +60,7 @@ public class ObjectDiffTest {
         return company;
     }
 
-    private Company company2(){
+    private Company company2() {
         User user = new User();
         user.id = "1";
         user.name = "张三";
